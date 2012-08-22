@@ -2,7 +2,7 @@
 /*
 Plugin Name: jsDelivr - Wordpress CDN Plugin
 Plugin URI: http://www.jsdelivr.com
-Description: A free public CDN integration with WordPress
+Description: The official plugin of jsDelivr.com, a free public CDN. An easy way to integrate the service and speed up your website using our super fast CDN.
 Author: jsDelivr
 Version: 0.1
 Author URI: http://www.jsdelivr.com
