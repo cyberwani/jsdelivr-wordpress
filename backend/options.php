@@ -59,7 +59,7 @@ if (!$last_scan)
     <div class="jsd_clear"></div>
   </div>
   <div class="jsd_status_text<?php echo ($this->enabled?' jsd_status_text_enabled':' jsd_status_text_disabled'); ?>">
-    <?php $this->enabled?_e('Plugin is enabled'):_e('Plugin is disabled'); ?>
+    <?php $this->enabled?_e('Plugin is enabled', $this->ld):_e('Plugin is disabled', $this->ld); ?>
   </div>
   <div class="jsd_control_right">
     <a class="button jsd_scan" href="#"<?php echo $disabled_scan; ?> onclick="return false;" title="<?php _e('Scan website', $this->ld); ?>"><?php _e('Scan website', $this->ld); ?></a>    
