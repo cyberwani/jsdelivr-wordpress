@@ -2,238 +2,242 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jsDelivr - Wordpress CDN Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-22 06:49+0100\n"
-"PO-Revision-Date: 2012-08-23 12:23+0200\n"
+"POT-Creation-Date: 2012-08-23 12:25+0200\n"
+"PO-Revision-Date: 2012-08-23 12:52+0200\n"
 "Last-Translator: Akulov Dmitriy <dakulovgr@gmail.com>\n"
 "Language-Team: jsDelivr <contact@jsdelivr.com>\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"Language: en\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: ..\n"
 
 #: ../jsdelivr.php:196
 msgid "jsDelivr CDN"
-msgstr ""
+msgstr "jsDelivr CDN"
 
 #: ../jsdelivr.php:226
 msgid "Overview"
-msgstr ""
+msgstr "Επισκόπηση"
 
 #: ../jsdelivr.php:235
 msgid "Debug"
-msgstr ""
+msgstr "Debug"
 
 #: ../jsdelivr.php:261
 msgid "Please wait..."
-msgstr ""
+msgstr "Παρακαλώ περιμένετε..."
 
 #: ../jsdelivr.php:262
 msgid "Error occured during scan process."
-msgstr ""
+msgstr "Σφάλμα κατά τη διαδικασία σάρωσης."
 
 #: ../jsdelivr.php:263
 msgid "Error occured during update process."
-msgstr ""
+msgstr "Παρουσιάστηκε σφάλμα κατά τη διάρκεια της διαδικασίας ενημέρωσης."
 
 #: ../jsdelivr.php:271
 msgid "Settings"
-msgstr ""
+msgstr "Ρυθμίσεις"
 
 #: ../jsdelivr.php:358
 msgid ""
 "Whoops! There was a problem with the data you posted. Please go back and try "
 "again."
 msgstr ""
+"Ουπς! Υπήρχε ένα πρόβλημα με τα δεδομένα που στείλατε. Παρακαλώ πηγαίνετε "
+"πίσω και δοκιμάστε ξανά."
 
 #: ../jsdelivr.php:395
 msgid "Settings were sucessfully saved."
-msgstr ""
+msgstr "Οι ρυθμίσεις αποθηκεύτηκαν με επιτυχία."
 
 #: ../backend/debug.php:2
 msgid "Check for update"
-msgstr ""
+msgstr "Έλεγχος για ενημέρωση"
 
 #: ../backend/debug.php:3
 msgid "Reset"
-msgstr ""
+msgstr "Reset"
 
 #: ../backend/options.php:26
 msgid "First time, you must"
-msgstr ""
+msgstr "Την πρώτη φορά πρέπει"
 
 #: ../backend/options.php:27 ../backend/update_notice.php:8
 msgid "Update CDN data"
-msgstr ""
+msgstr "Ενημέρωση CDN δεδομένων"
 
 #: ../backend/options.php:27 ../backend/update_notice.php:8
 msgid "update CDN data"
-msgstr ""
+msgstr "ενωμερώσετε τα CDN δεδομένα"
 
 #: ../backend/options.php:28
 msgid ""
 "Then you will be able scan your website and activate CDN service for "
 "appropriate files."
 msgstr ""
+"Στη συνέχεια, θα είστε σε θέση σαρώσετε την ιστοσελίδα σας και να "
+"ενεργοποιήσετε την υπηρεσία CDN για τα κατάλληλα αρχεία."
 
 #: ../backend/options.php:39
 msgid "Now, you can"
-msgstr ""
+msgstr "Τώρα, μπορείτε"
 
 #: ../backend/options.php:40 ../backend/options.php:65
 msgid "Scan website"
-msgstr ""
+msgstr "Σάρωση ιστοσελίδας"
 
 #: ../backend/options.php:40
 msgid "scan your website"
-msgstr ""
+msgstr "να σαρώσετε την ιστοσελίδα σας"
 
 #: ../backend/options.php:55 ../backend/options.php:89
 #: ../backend/options.php:196 ../backend/options.php:247
 msgid "Disabled"
-msgstr ""
+msgstr "Απενεργοποιήμενο"
 
 #: ../backend/options.php:56 ../backend/options.php:90
 #: ../backend/options.php:196 ../backend/options.php:248
 msgid "Enabled"
-msgstr ""
+msgstr "Ενεργοποιημένο"
 
 #: ../backend/options.php:58 ../backend/options.php:253
 msgid "Save all settings"
-msgstr ""
+msgstr "Αποθήκευση των ρυθμίσεων"
 
 #: ../backend/options.php:62
 msgid "Plugin is enabled"
-msgstr ""
+msgstr "Το plugin είναι ενεργοποιημένο"
 
 #: ../backend/options.php:62
 msgid "Plugin is disabled"
-msgstr ""
+msgstr "Το plugin είναι απενεργοποιημένο"
 
 #: ../backend/options.php:72 ../backend/options.php:230
 msgid "Bulk actions"
-msgstr ""
+msgstr "Μαζικές ενέργειες"
 
 #: ../backend/options.php:73 ../backend/options.php:148
 #: ../backend/options.php:231
 msgid "Script load"
-msgstr ""
+msgstr "Φόρτωση script"
 
 #: ../backend/options.php:75 ../backend/options.php:82
 #: ../backend/options.php:88 ../backend/options.php:233
 #: ../backend/options.php:240 ../backend/options.php:246
 msgid "Please select"
-msgstr ""
+msgstr "Παρακαλώ επιλέξτε"
 
 #: ../backend/options.php:76 ../backend/options.php:150
 #: ../backend/options.php:234
 msgid "Regular"
-msgstr ""
+msgstr "Κανονική"
 
 #: ../backend/options.php:77 ../backend/options.php:151
 #: ../backend/options.php:235
 msgid "Async"
-msgstr ""
+msgstr "Async"
 
 #: ../backend/options.php:78 ../backend/options.php:152
 #: ../backend/options.php:236
 msgid "Defer"
-msgstr ""
+msgstr "Defer"
 
 #: ../backend/options.php:80 ../backend/options.php:155
 #: ../backend/options.php:238
 msgid "Move to the footer"
-msgstr ""
+msgstr "Μετακίνηση στο footer"
 
 #: ../backend/options.php:83 ../backend/options.php:241
 msgid "No"
-msgstr ""
+msgstr "Όχι"
 
 #: ../backend/options.php:84 ../backend/options.php:242
 msgid "Yes"
-msgstr ""
+msgstr "Ναί"
 
 #: ../backend/options.php:86 ../backend/options.php:101
 #: ../backend/options.php:110 ../backend/options.php:244
 msgid "Status"
-msgstr ""
+msgstr "Κατάσταση"
 
 #: ../backend/options.php:92 ../backend/options.php:250
 msgid "Apply"
-msgstr ""
+msgstr "Εφαρμογή"
 
 #: ../backend/options.php:99 ../backend/options.php:108
 msgid "File"
-msgstr ""
+msgstr "Αρχείο"
 
 #: ../backend/options.php:100 ../backend/options.php:109
 msgid "Package"
-msgstr ""
+msgstr "Πακέτο"
 
 #: ../backend/options.php:102 ../backend/options.php:111
 msgid "Match"
-msgstr ""
+msgstr "Ταίριασμα"
 
 #: ../backend/options.php:119
 msgid "File list is empty."
-msgstr ""
+msgstr "Η λίστα αρχείων είναι άδεια."
 
 #: ../backend/options.php:141 ../backend/options.php:172
 #: ../backend/options.php:180
 msgid "Version:"
-msgstr ""
+msgstr "Έκδοση:"
 
 #: ../backend/options.php:141
 msgid "None"
-msgstr ""
+msgstr "None"
 
 #: ../backend/options.php:156
 msgid "with priority"
-msgstr ""
+msgstr "με προτεραιότητα"
 
 #: ../backend/options.php:171 ../backend/options.php:179
 msgid "Name:"
-msgstr ""
+msgstr "Όνομα:"
 
 #: ../backend/options.php:173
 msgid "Google Hosted Libraries"
-msgstr ""
+msgstr "Google Hosted Libraries"
 
 #: ../backend/options.php:181
 msgid "Author:"
-msgstr ""
+msgstr "Συγγραφέας:"
 
 #: ../backend/options.php:210
 msgid "100% Match"
-msgstr ""
+msgstr "100% Ταίριασμα"
 
 #: ../backend/options.php:214
 msgid "Same plugin, but maybe different versions"
-msgstr ""
+msgstr "Το ίδιο plugin, αλλά ίσως διαφορετικές εκδόσεις"
 
 #: ../backend/options.php:218
 msgid "Not matching"
-msgstr ""
+msgstr "Δεν ταιριάζουν"
 
 #: ../backend/overview.php:2
 msgid "Overview of this plugin"
-msgstr ""
+msgstr "Επισκόπηση αυτού του plugin"
 
 #: ../backend/top.php:3
 msgid " - Wordpress CDN Plugin"
-msgstr ""
+msgstr " - Wordpress CDN Plugin"
 
 #: ../backend/update_notice.php:6
 msgid "jsDelivr CDN:"
-msgstr ""
+msgstr "jsDelivr CDN:"
 
 #: ../backend/update_notice.php:7
 msgid "New update of the CDN database available, please"
-msgstr ""
+msgstr "Νέα ενημέρωση της CDN βάσης είναι διαθέσιμη, παρακαλώ"
 
 #: ../backend/update_notice.php:14
 msgid "Dismiss"
-msgstr ""
+msgstr "Απόρριψη"
