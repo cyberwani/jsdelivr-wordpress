@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jsDelivr - Wordpress CDN Plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-08-23 09:15+0100\n"
-"PO-Revision-Date: 2012-08-23 09:43+0100\n"
+"PO-Revision-Date: 2012-08-23 09:52+0100\n"
 "Last-Translator: Martin Sudolsky <martin@sudolsky.com>\n"
 "Language-Team: jsDelivr <contact@jsdelivr.com>\n"
 "MIME-Version: 1.0\n"
@@ -248,7 +248,7 @@ msgstr "Prehľad o tomto rožšírení"
 
 #: ../backend/top.php:3
 msgid " - Wordpress CDN Plugin"
-msgstr "Wordpress CDN Rozšírenie"
+msgstr " - Wordpress CDN Rozšírenie"
 
 #: ../backend/update_notice.php:6
 msgid "jsDelivr CDN:"
