@@ -2,55 +2,76 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jsDelivr - Wordpress CDN Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-23 09:15+0100\n"
-"PO-Revision-Date: 2012-08-23 09:52+0100\n"
+"POT-Creation-Date: 2013-02-17 03:45+0100\n"
+"PO-Revision-Date: 2013-02-17 03:48+0100\n"
 "Last-Translator: Martin Sudolsky <martin@sudolsky.com>\n"
 "Language-Team: jsDelivr <contact@jsdelivr.com>\n"
+"Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: .\n"
-"X-Poedit-Language: Slovak\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-Country: SLOVAKIA\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../jsdelivr.php:196
+#: ../jsdelivr.php:222
 msgid "jsDelivr CDN"
 msgstr "jsDelivr CDN"
 
-#: ../jsdelivr.php:226
-msgid "Overview"
-msgstr "Prehľad"
-
-#: ../jsdelivr.php:235
+#: ../jsdelivr.php:268
 msgid "Debug"
 msgstr "Ladiť"
 
-#: ../jsdelivr.php:261
+#: ../jsdelivr.php:296
 msgid "Please wait..."
 msgstr "Čakajte..."
 
-#: ../jsdelivr.php:262
+#: ../jsdelivr.php:297
+msgid "Error"
+msgstr "Chyba"
+
+#: ../jsdelivr.php:298
 msgid "Error occured during scan process."
 msgstr "Nastala chyba počas skenovania stránky."
 
-#: ../jsdelivr.php:263
+#: ../jsdelivr.php:299
 msgid "Error occured during update process."
 msgstr "Nastava chyba počas aktualizácie."
 
-#: ../jsdelivr.php:271
+#: ../jsdelivr.php:307
 msgid "Settings"
 msgstr "Nastavenia"
 
-#: ../jsdelivr.php:358
-msgid "Whoops! There was a problem with the data you posted. Please go back and try again."
-msgstr "Hopla! Objavil sa problém s odoslanými dátami. Prosím, skúste sa vratiť a zopakovať akciu."
+#: ../jsdelivr.php:406
+msgid ""
+"Whoops! There was a problem with the data you posted. Please go back and try "
+"again."
+msgstr ""
+"Hopla! Objavil sa problém s odoslanými dátami. Prosím, skúste sa vratiť a "
+"zopakovať akciu."
 
-#: ../jsdelivr.php:395
+#: ../jsdelivr.php:443
 msgid "Settings were sucessfully saved."
 msgstr "Nastavenia boli úspešné uložené."
+
+#: ../jsdelivr.php:555
+msgid ""
+"Cannot get content from remove server via function file_get_contents. Please "
+"check configuration of your server or install CURL."
+msgstr ""
+"Nemožem stiahnuť obsah zo vzdialeného servera cez funkciu file_get_contents. "
+"Prosím skontrolujte nastavenie vášho servera alebo nainštalujte CURL."
+
+#: ../jsdelivr.php:603
+msgid ""
+"Cannot get content from remote server. Please enable CURL or allow_url_fopen "
+"with appropriate wrappers or tcp/ssl transports on your server."
+msgstr ""
+"Nemožem stiahnuť obsah zo vzdialeného servera. Prosím povoľte CURL, "
+"allow_url_fopen s príslušnými wrappermi alebo tcp/ssl transportz na vašom "
+"serveri."
 
 #: ../backend/debug.php:2
 msgid "Check for update"
@@ -60,185 +81,178 @@ msgstr "Skontrolovať aktualizáciu"
 msgid "Reset"
 msgstr "Reset"
 
-#: ../backend/options.php:26
+#: ../backend/options.php:22
 msgid "First time, you must"
 msgstr "Prvý krát musíte"
 
-#: ../backend/options.php:27
-#: ../backend/update_notice.php:8
+#: ../backend/options.php:23 ../backend/update_notice.php:8
 msgid "Update CDN data"
 msgstr "Aktualizovať CDN dáta"
 
-#: ../backend/options.php:27
-#: ../backend/update_notice.php:8
+#: ../backend/options.php:23 ../backend/update_notice.php:8
 msgid "update CDN data"
 msgstr "aktualizovať CDN dáta"
 
-#: ../backend/options.php:28
-msgid "Then you will be able scan your website and activate CDN service for appropriate files."
-msgstr "Potom budete môcť skenovať vašu webovú stránku a aktivovať CDN služby pre príslušné súbory."
+#: ../backend/options.php:24
+msgid ""
+"Then you will be able scan your website and activate CDN service for "
+"appropriate files."
+msgstr ""
+"Potom budete môcť skenovať vašu webovú stránku a aktivovať CDN služby pre "
+"príslušné súbory."
 
-#: ../backend/options.php:39
+#: ../backend/options.php:35
 msgid "Now, you can"
 msgstr "Teraz môžete"
 
-#: ../backend/options.php:40
-#: ../backend/options.php:65
+#: ../backend/options.php:36 ../backend/options.php:79
 msgid "Scan website"
 msgstr "Skenovať webovú stránku"
 
-#: ../backend/options.php:40
+#: ../backend/options.php:36
 msgid "scan your website"
 msgstr "skenovať vašu webovú stránku"
 
-#: ../backend/options.php:55
-#: ../backend/options.php:89
-#: ../backend/options.php:196
-#: ../backend/options.php:247
+#: ../backend/options.php:46
+msgid "An unexpected error occured."
+msgstr "Objavila sa neočakávaná chyba."
+
+#: ../backend/options.php:50
+msgid "Please report the error message in the box above at"
+msgstr "Prosím zahláste chybovú správu v rámčeku vyššie na adrese"
+
+#: ../backend/options.php:53
+msgid "You can help us improve the plugin. Thanks."
+msgstr "Môžete nám pomôcť vylepšiť plugin. Ďakujeme."
+
+#: ../backend/options.php:56
+msgid "Ok, I did it"
+msgstr "Ok, spravil som to"
+
+#: ../backend/options.php:69 ../backend/options.php:103
+#: ../backend/options.php:210 ../backend/options.php:261
 msgid "Disabled"
 msgstr "Neaktívne"
 
-#: ../backend/options.php:56
-#: ../backend/options.php:90
-#: ../backend/options.php:196
-#: ../backend/options.php:248
+#: ../backend/options.php:70 ../backend/options.php:104
+#: ../backend/options.php:210 ../backend/options.php:262
 msgid "Enabled"
 msgstr "Aktívne"
 
-#: ../backend/options.php:58
-#: ../backend/options.php:253
+#: ../backend/options.php:72 ../backend/options.php:267
 msgid "Save all settings"
 msgstr "Uložiť všetky nastavenia"
 
-#: ../backend/options.php:62
+#: ../backend/options.php:76
 msgid "Plugin is enabled"
 msgstr "Rozširenie je aktívne."
 
-#: ../backend/options.php:62
+#: ../backend/options.php:76
 msgid "Plugin is disabled"
 msgstr "Rozširenie je neaktívne."
 
-#: ../backend/options.php:72
-#: ../backend/options.php:230
+#: ../backend/options.php:86 ../backend/options.php:244
 msgid "Bulk actions"
 msgstr "Hromadné akcie"
 
-#: ../backend/options.php:73
-#: ../backend/options.php:148
-#: ../backend/options.php:231
+#: ../backend/options.php:87 ../backend/options.php:162
+#: ../backend/options.php:245
 msgid "Script load"
 msgstr "Nacítanie skriptu"
 
-#: ../backend/options.php:75
-#: ../backend/options.php:82
-#: ../backend/options.php:88
-#: ../backend/options.php:233
-#: ../backend/options.php:240
-#: ../backend/options.php:246
+#: ../backend/options.php:89 ../backend/options.php:96
+#: ../backend/options.php:102 ../backend/options.php:247
+#: ../backend/options.php:254 ../backend/options.php:260
 msgid "Please select"
 msgstr "Prosím zvoľte"
 
-#: ../backend/options.php:76
-#: ../backend/options.php:150
-#: ../backend/options.php:234
+#: ../backend/options.php:90 ../backend/options.php:164
+#: ../backend/options.php:248
 msgid "Regular"
 msgstr "Regular"
 
-#: ../backend/options.php:77
-#: ../backend/options.php:151
-#: ../backend/options.php:235
+#: ../backend/options.php:91 ../backend/options.php:165
+#: ../backend/options.php:249
 msgid "Async"
 msgstr "Async"
 
-#: ../backend/options.php:78
-#: ../backend/options.php:152
-#: ../backend/options.php:236
+#: ../backend/options.php:92 ../backend/options.php:166
+#: ../backend/options.php:250
 msgid "Defer"
 msgstr "Defer"
 
-#: ../backend/options.php:80
-#: ../backend/options.php:155
-#: ../backend/options.php:238
+#: ../backend/options.php:94 ../backend/options.php:169
+#: ../backend/options.php:252
 msgid "Move to the footer"
 msgstr "Premiestniť do pätičky"
 
-#: ../backend/options.php:83
-#: ../backend/options.php:241
+#: ../backend/options.php:97 ../backend/options.php:255
 msgid "No"
 msgstr "Nie"
 
-#: ../backend/options.php:84
-#: ../backend/options.php:242
+#: ../backend/options.php:98 ../backend/options.php:256
 msgid "Yes"
 msgstr "Áno"
 
-#: ../backend/options.php:86
-#: ../backend/options.php:101
-#: ../backend/options.php:110
-#: ../backend/options.php:244
+#: ../backend/options.php:100 ../backend/options.php:115
+#: ../backend/options.php:124 ../backend/options.php:258
 msgid "Status"
 msgstr "Status"
 
-#: ../backend/options.php:92
-#: ../backend/options.php:250
+#: ../backend/options.php:106 ../backend/options.php:264
 msgid "Apply"
 msgstr "Aplikovať"
 
-#: ../backend/options.php:99
-#: ../backend/options.php:108
+#: ../backend/options.php:113 ../backend/options.php:122
 msgid "File"
 msgstr "Súbor"
 
-#: ../backend/options.php:100
-#: ../backend/options.php:109
+#: ../backend/options.php:114 ../backend/options.php:123
 msgid "Package"
 msgstr "Balíček"
 
-#: ../backend/options.php:102
-#: ../backend/options.php:111
+#: ../backend/options.php:116 ../backend/options.php:125
 msgid "Match"
 msgstr "Zhoda"
 
-#: ../backend/options.php:119
+#: ../backend/options.php:133
 msgid "File list is empty."
 msgstr "Zoznam súborov je prázdny."
 
-#: ../backend/options.php:141
-#: ../backend/options.php:172
-#: ../backend/options.php:180
+#: ../backend/options.php:155 ../backend/options.php:186
+#: ../backend/options.php:194
 msgid "Version:"
 msgstr "Verzia:"
 
-#: ../backend/options.php:141
+#: ../backend/options.php:155
 msgid "None"
 msgstr "Žiadna"
 
-#: ../backend/options.php:156
+#: ../backend/options.php:170
 msgid "with priority"
 msgstr "s prioritou"
 
-#: ../backend/options.php:171
-#: ../backend/options.php:179
+#: ../backend/options.php:185 ../backend/options.php:193
 msgid "Name:"
 msgstr "Názov:"
 
-#: ../backend/options.php:173
+#: ../backend/options.php:187
 msgid "Google Hosted Libraries"
 msgstr "Google Hosted Libraries"
 
-#: ../backend/options.php:181
+#: ../backend/options.php:195
 msgid "Author:"
 msgstr "Autor:"
 
-#: ../backend/options.php:210
+#: ../backend/options.php:224
 msgid "100% Match"
 msgstr "100% zhoda"
 
-#: ../backend/options.php:214
+#: ../backend/options.php:228
 msgid "Same plugin, but maybe different versions"
 msgstr "Rovnaké rozširenie, ale možno rozličné verzie."
 
-#: ../backend/options.php:218
+#: ../backend/options.php:232
 msgid "Not matching"
 msgstr "Žiadna zhoda"
 
@@ -262,3 +276,5 @@ msgstr "Dostupná nová aktualizácia CDN databázy, prosím"
 msgid "Dismiss"
 msgstr "Zamietnuť"
 
+#~ msgid "Overview"
+#~ msgstr "Prehľad"
