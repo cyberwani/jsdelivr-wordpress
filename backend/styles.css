@@ -163,3 +163,31 @@ a.jsd_active
 {
   margin-right: 10px;
 }
+
+#jsd_error_dialog
+{
+  display: none;
+}
+
+.jsd_error_dialog_content
+{
+  padding-top: 5px;
+}
+
+#jsd_error_dialog_text
+{
+  width: 100%;
+  height: 230px;
+  font-family: courier;
+  margin: 5px 0;
+}
+
+.jsd_error_dialog_support_text
+{
+  float: left;
+}
+
+.jsd_ok_error_button_div
+{
+  float: right;
+}

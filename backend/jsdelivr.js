@@ -1,39 +1,84 @@
 jQuery(document).ready(function($)
 {
+
   var _self = this;
+  
+  this.showErrorMessage = function(content)
+  {
+    var datetime = 'Date: ' + new Date().toUTCString() + '\n';
+    $('#jsd_error_dialog_text').val(datetime + content);
+    tb_show(jsdelivr_data.text.error, '#TB_inline?width=550&height=320&inlineId=jsd_error_dialog');
+  }
+  
+  $('#jsd_ok_error_button').bind('click', function()
+  {
+    tb_remove();
+  });
 
   this.scan = function()
   {      
     _self.show_wait();
-    $.post(jsdelivr_data.action_admin, {'jsd_action': 'scan'}, function(r)
-    {
-      if ((typeof r.status !== 'undefined') && r.status == 1)
-      {
-        location.href = jsdelivr_data.default_url
-      }
-      else
+    $.ajax({
+      url: jsdelivr_data.action_admin,
+      type: 'POST',
+      async: true,
+      data: {
+        jsd_action: 'scan'
+      },
+      dataType: 'json',
+      error: function(xhr, status, error)
       {
         _self.hide_wait();
-        alert(jsdelivr_data.text.error_scan);
-      }              
+        var text = 'HTTP status: ' + xhr.status + '\nServer output:\n' + xhr.responseText;
+        _self.showErrorMessage(text);
+      },
+      success: function(data, status, xhr)
+      {
+        if (data && data.hasOwnProperty('status') && data.status == 1)
+          location.href = jsdelivr_data.default_url;
+        else
+        {
+          _self.hide_wait();
+          if (data && data.hasOwnProperty('message') && data.message)
+            alert(data.message);
+          else
+            alert(jsdelivr_data.text.error_scan);
+        }              
+      }    
     });    
   }    
 
   this.update_cdn = function()
   {
     _self.show_wait();
-    $.post(jsdelivr_data.action_admin, {'jsd_action': 'update_cdn'}, function(r)
-    {
-      if ((typeof r.status !== 'undefined') && r.status == 1)
-      {
-        location.href = jsdelivr_data.default_url
-      }
-      else
+    $.ajax({
+      url: jsdelivr_data.action_admin,
+      type: 'POST',
+      async: true,
+      data: {
+        jsd_action: 'update_cdn'
+      },
+      dataType: 'json',
+      error: function(xhr, status, error)
       {
         _self.hide_wait();
-        alert(jsdelivr_data.text.error_update_cdn);
-      }              
-    });            
+        var text = 'HTTP status: ' + xhr.status + '\nServer output:\n' + xhr.responseText;
+        _self.showErrorMessage(text);
+      },
+      success: function(data, status, xhr)
+      {        
+        if (data && data.hasOwnProperty('status') && data.status == 1)
+          location.href = jsdelivr_data.default_url;
+        else
+        {
+          _self.hide_wait();
+          if (data && data.hasOwnProperty('message') && data.message)
+            alert(data.message);
+          else
+            alert(jsdelivr_data.text.error_update_cdn);
+        }              
+      }    
+    });    
   }
   
   this.show_wait = function()

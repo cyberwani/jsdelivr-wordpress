@@ -4,7 +4,7 @@ Plugin Name: jsDelivr - Wordpress CDN Plugin
 Plugin URI: http://www.jsdelivr.com
 Description: The official plugin of jsDelivr.com, a free public CDN. An easy way to integrate the service and speed up your website using our super fast CDN.
 Author: jsDelivr
-Version: 0.1
+Version: 0.2
 Author URI: http://www.jsdelivr.com
 License: GPLv2 
 */
@@ -26,21 +26,28 @@ if (!class_exists('jsdelivr'))
   define('JSDM_MAYBE', 1);
   define('JSDM_FULL', 2);
   
+  class jsdelivr_Exception extends Exception { }
+  
+  // main class
   class jsdelivr
-  {
+  {    
+    const ld = 'jsdelivr'; // name of localization domain  
+    const version = '0.2'; // current version
+    const nonce = 'jsdelivr_nonce';
+    
     // turn on/off debug mode
     protected $debug = true;
-      
-    protected $ld = 'jsdelivr'; // name of localization domain    
+          
     protected $url; // plugin URL
     protected $path; // plugin path
     
     protected $enabled;
         
     // internal values
-    private $user_agent = 'jsDelivr WP CDN Plugin';
-    private $update_cdn_url = 'http://www.jsdelivr.com/hash.php';
-    private $timestamp_url = 'http://www.jsdelivr.com/timestamp.txt';
+    const user_agent = 'jsDelivr WP CDN Plugin';
+    const update_cdn_url = 'http://www.jsdelivr.com/hash.php';
+    const timestamp_url = 'http://www.jsdelivr.com/timestamp.txt';
+    
     private $cdn_baseurl = '//cdn.jsdelivr.net';
     
     // libs hosted by Google CDN
@@ -48,7 +55,9 @@ if (!class_exists('jsdelivr'))
     private $gcdn = array(
               'jquery' => array(
                   'name' => 'jQuery',
-                  'versions' =>  array(
+                  'versions' =>  array(                          
+                  // I added only versions up to 1.8.3, because it looks that many scripts are broken with jQuery version 1.9.x
+                          '1.8.3', '1.8.2', '1.8.1',
                           '1.8.0', '1.7.2', '1.7.1', '1.7.0', '1.6.4', '1.6.3', '1.6.2', '1.6.1', '1.6.0', '1.5.2', 
                           '1.5.1', '1.5.0', '1.4.4', '1.4.3', '1.4.2', '1.4.1', '1.4.0', '1.3.2', '1.3.1', '1.3.0', 
                           '1.2.6', '1.2.3'
@@ -56,33 +65,49 @@ if (!class_exists('jsdelivr'))
                   'files' => array('jquery.js', 'jquery.min.js')                        
                 )        
           );
-        
+          
+          
+    // skip URLs with string occurrence from the list below during scan
+    private $scan_skip_urls = array(
+                   '.googleapis.com', 'cdn.jsdelivr.'
+                );
+
+    private $supported_image_exts = array(
+                  'jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'tif', 'xbm'
+                );
+                  
     function __construct()
     {                      
-      // check used protocol and set proper cdn base URL
+      // checks used protocol and set proper cdn base URL
+      /* ! I commented this because what if PHP handler is hidden via proxy server that supports HTTPS protocol, eg:
+         1. I have nginx as a router where is defined SSL certificate and requests are routed into apache server at port XY without SSL
+         2. again I have nginx, but I didn't use parameter "fastcgi_param" to pass HTTPS variable into PHP script
+         
+         It should work correctly in way //example.com/some_file.js, so browser will choose correct scheme
+      */
+      /*
       $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443)?"https":"http";
       $this->cdn_baseurl = $protocol.':'.$this->cdn_baseurl;
+      */
+      
       
       $this->enabled = get_option('jsdelivr_enabled', false);
             
       if (is_admin())
       {
+        // load translation on plugins_loaded
+        add_action('plugins_loaded', array(&$this, 'plugins_loaded'));
+      
         $this->url = WP_PLUGIN_URL.'/'.dirname(plugin_basename(__FILE__));
         $this->path = WP_PLUGIN_DIR.'/'.dirname(plugin_basename(__FILE__));
-
-        // load language file
-        $locale = get_locale();
-        $mo = $this->path.'/languages/'.$locale.'.mo';
-        load_textdomain($this->ld, $mo);
         
         add_action('admin_menu', array(&$this, 'admin_menu')); 
         add_action('wp_ajax_jsdelivr_action', array(&$this, 'action'));
         
         if ($this->debug)
-        {
           add_action('wp_ajax_jsdelivr_action_debug', array(&$this, 'action_debug'));        
-        }
 
+          
         // wp_cron action
         add_action('jsdelivr_check_update', array(&$this, 'check_update_cdn'));
         
@@ -95,18 +120,14 @@ if (!class_exists('jsdelivr'))
           add_action('admin_notices', array(&$this, 'update_notice'));
         }
                  
-        // install hook
+        // activation, deactivation and uninstall hooks
         register_activation_hook(__FILE__, array(&$this, 'activation'));
         register_deactivation_hook(__FILE__, array(&$this, 'deactivation'));
+        register_uninstall_hook(__FILE__, array('jsdelivr', 'uninstall'));
       }
       else
-      {
-        // plugin is enabled
-        if ($this->enabled)
-        {
-          add_action('init', array(&$this, 'init_onthefly'), 0);
-        }
-      }
+      if ($this->enabled) // if plugin is enabled
+        add_action('init', array(&$this, 'init_onthefly'), 0);
     }
     
     // deactivation
@@ -163,9 +184,7 @@ if (!class_exists('jsdelivr'))
       dbDelta(array($sql1, $sql2, $sql3));      
       
       if (!wp_next_scheduled('jsdelivr_check_update'))
-      {
         wp_schedule_event(time(), 'daily', 'jsdelivr_check_update');
-      }                             
     }
 
     // uninstall
@@ -188,12 +207,19 @@ if (!class_exists('jsdelivr'))
     function update_notice()
     {
       require_once $this->path.'/backend/update_notice.php';
+    }
+    
+    // on plugins_loaded
+    function plugins_loaded()
+    {
+      // load text domain
+      load_plugin_textdomain(self::ld, false, $this->path.'/languages/');
     }    
 
     // add menu in Settings    
     function admin_menu()
     {
-      $hook = add_options_page(__('jsDelivr CDN', $this->ld), __('jsDelivr CDN', $this->ld), 'manage_options', 'jsdelivr', array(&$this, 'options_page'));
+      $hook = add_options_page(__('jsDelivr CDN', self::ld), __('jsDelivr CDN', self::ld), 'manage_options', 'jsdelivr', array(&$this, 'options_page'));
       add_filter('plugin_action_links_'.plugin_basename(__FILE__), array(&$this, 'filter_plugin_actions'), 10, 2);
       
       // add help tab
@@ -203,11 +229,13 @@ if (!class_exists('jsdelivr'))
       }
       else // this is for backward compatibility < WP 3.3
       {
+        /*
         ob_start();
         require_once $this->path.'/backend/overview.php';
         $content = ob_get_contents();
         ob_end_clean();
         add_contextual_help($hook, $content);
+        */
       }
             
       add_action("admin_print_styles-$hook", array(&$this, 'add_admin_css'));                             
@@ -220,47 +248,55 @@ if (!class_exists('jsdelivr'))
       // add help tab
       $screen = get_current_screen();
       
+      if (!method_exists($screen, 'add_help_tab'))
+        return;
+      
       // overview tab
+      /*
       $screen->add_help_tab(array( 
             'id' => 'jsdelivr_overview',
-            'title' => __('Overview', $this->ld),
+            'title' => __('Overview', self::ld),
             'callback' => array(&$this, 'help_overview')            
           ));
-       
+      */
+              
       // debug tab for developers   
       if ($this->debug)
       {
         $screen->add_help_tab(array( 
             'id' => 'jsdelivr_debug',
-            'title' => __('Debug', $this->ld),
+            'title' => __('Debug', self::ld),
             'callback' => array(&$this, 'help_debug')            
           ));                        
       }                  
     }
     
-    function help_overview() { require_once $this->path.'/backend/overview.php'; }
+    //function help_overview() { require_once $this->path.'/backend/overview.php'; }
     function help_debug() { require_once $this->path.'/backend/debug.php'; }
     
     
     function add_admin_css()
     {
-      wp_enqueue_style('jsdelivr_styles', $this->url.'/backend/styles.css', array(), '1.0', 'all');          
+      wp_enqueue_style('thickbox');
+      wp_enqueue_style('jsdelivr_styles', $this->url.'/backend/styles.css', array(), self::version, 'all');          
     }
     
     function add_admin_js()
     {
       wp_enqueue_script('jquery');
+      wp_enqueue_script('thickbox');
       wp_enqueue_script('jquery.blockUI', $this->url.'/3rdparty/jquery.blockUI.js', array('jquery'), '2.42');          
-      wp_enqueue_script('jsdelivr', $this->url.'/backend/jsdelivr.js', array('jquery'), '1.0', false);          
+      wp_enqueue_script('jsdelivr', $this->url.'/backend/jsdelivr.js', array('jquery'), self::version, false);          
       wp_localize_script('jsdelivr', 'jsdelivr_data',
             array(
               'action_admin' => admin_url('admin-ajax.php?action=jsdelivr_action'),
               'default_url' => admin_url('options-general.php?page=jsdelivr&t='.time()),
               'cdn_update' => isset($_GET['cdn_update'])?true:false,
               'text' => array(
-                  'please_wait' => __('Please wait...', $this->ld),
-                  'error_scan' => __('Error occured during scan process.', $this->ld),
-                  'error_update_cdn' => __('Error occured during update process.', $this->ld)
+                  'please_wait' => __('Please wait...', self::ld),
+                  'error' => __('Error', self::ld),
+                  'error_scan' => __('Error occured during scan process.', self::ld),
+                  'error_update_cdn' => __('Error occured during update process.', self::ld)
                 )
               ));              
     }
@@ -308,30 +344,42 @@ if (!class_exists('jsdelivr'))
             
       header("Content-Type: application/json");
       
+      $message = false;
+      $r = false;
+      
       switch($_POST['jsd_action'])
       {
-        case 'scan':
-          $r = $this->scan();
+        case 'scan':                    
+          try
+          {
+            $r = $this->scan();
+          }
+          catch(jsdelivr_Exception $e)
+          {
+            $message = $e->getMessage();
+          }
+          
           if ($r)
-          {
             echo json_encode(array('status' => 1));           
-          }
           else
-          {
-            echo json_encode(array('status' => 2));                       
-          }
+            echo json_encode(array('status' => 2, 'message' => $message));
+            
           break;
           
         case 'update_cdn':
-          $r = $this->update_cdn();
-          if ($r)
+          try
           {
-            echo json_encode(array('status' => 1));                     
+            $r = $this->update_cdn();
           }
-          else
+          catch(jsdelivr_Exception $e)
           {
-            echo json_encode(array('status' => 2));                     
-          }        
+            $message = $e->getMessage();
+          }
+          
+          if ($r)
+            echo json_encode(array('status' => 1));                     
+          else
+            echo json_encode(array('status' => 2, 'message' => $message));                     
           break;
           
         case 'dismiss_update_notice':
@@ -348,14 +396,14 @@ if (!class_exists('jsdelivr'))
       global $wpdb;            
       $action_url = admin_url('options-general.php?page=jsdelivr');
       
-      require_once $this->path.'/backend/top.php';            
-                              
+      require_once $this->path.'/backend/top.php';
+      
       // save options
       if (isset($_POST['save_options']) && $_POST['save_options'])
       {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'jsdelivr_nonce'))
+        if (!wp_verify_nonce($_POST['_wpnonce'], self::nonce))
         {
-          die(__('Whoops! There was a problem with the data you posted. Please go back and try again.', $this->ld));
+          die(__('Whoops! There was a problem with the data you posted. Please go back and try again.', self::ld));
         }
         
         $ids = isset($_POST['ids'])?$_POST['ids']:array();
@@ -392,7 +440,7 @@ if (!class_exists('jsdelivr'))
         // cache flush
         $this->cache_flush();
         
-        echo '<div class="updated"><p>'.__('Settings were sucessfully saved.', $this->ld).'</p></div>'; 
+        echo '<div class="updated"><p>'.__('Settings were sucessfully saved.', self::ld).'</p></div>'; 
       }
 
       // get info about last cdn update/scan
@@ -438,13 +486,9 @@ if (!class_exists('jsdelivr'))
       $data_to = get_option('jsdelivr_data_to', false);
       
       if ($data_from && $data_to)
-      {                
         return str_replace($data_from, $data_to, $buffer);
-      }
       else
-      {
         return $buffer;
-      }
     }
     
     // on the fly - init function
@@ -455,15 +499,18 @@ if (!class_exists('jsdelivr'))
         
     // loads content of website at URL address
     protected function get_content($url)
-    {      
-      if (function_exists('curl_init'))
+    {
+      $handled = false;
+      $data = false;
+      
+      if (function_exists('curl_init')) // CURL method
       {
         $ch = curl_init();
         curl_setopt_array($ch,
                 array(CURLOPT_URL => $url,
                       CURLOPT_FRESH_CONNECT => true,
                       CURLOPT_FOLLOWLOCATION => false,
-                      CURLOPT_USERAGENT => $this->user_agent,
+                      CURLOPT_USERAGENT => self::user_agent,
                       CURLOPT_HEADER => true,
                       CURLOPT_RETURNTRANSFER => true 
                 ));
@@ -485,33 +532,86 @@ if (!class_exists('jsdelivr'))
             if (!$url['scheme']) $url['scheme'] = $last_url['scheme'];
             if (!$url['host']) $url['host'] = $last_url['host'];
             if (!$url['path']) $url['path'] = $last_url['path'];        
-            $new_url = $url['scheme'] . '://' . $url['host'] . $url['path'] . ($url['query']?'?'.$url['query']:'');
+            $new_url = $url['scheme'] . '://' . $url['host'] . $url['path'] . (isset($url['query']) && $url['query']?'?'.$url['query']:'');
             $data = $this->get_content($new_url);
           }
         }
         else
-        {                                                                      
           $data = substr($data, $delimiter + 4, strlen($data) - $delimiter - 4);
-        }         
+          
+        $handled = true;
         curl_close($ch);
       }
       else
       {
-        // TODO: add more methods ?        
-        $data = false;          
+        $wrappers = stream_get_wrappers();
+
+        // uses fopen http wrapper via function file_get_contents
+        if (ini_get('allow_url_fopen') && in_array('http', $wrappers))
+        {
+          $data = file_get_contents($url);
+          
+          if ($data === false)
+            throw new jsdelivr_Exception(__('Cannot get content from remove server via function file_get_contents. Please check configuration of your server or install CURL.', self::ld));
+            
+          $handled = true;         
+        }
+        else // still we can try fsockopen
+        {
+          // get supported transports
+          $transports = stream_get_transports();          
+          if (in_array('tcp', $transports) && in_array('ssl', $transports))
+          {
+            $url = parse_url($url);
+            $ssl = stripos($url['scheme'], 'https') !== false;
+            
+            $f = fsockopen(($ssl?'ssl':'tcp').'://'.$url['host'], $ssl?443:80, $errno, $errstr);
+            if ($f)
+            {
+              $s = "GET ".$url['path']." HTTP/1.1\r\n";
+              $s.= "Host: ".$url['host']."\r\n";
+              $s.= "User-Agent: ".self::user_agent."\r\n";
+              $s.= "Connection: Close\r\n\r\n";
+              fwrite($f, $s);
+              
+              $output = '';
+              while(!feof($f) && $line = fgets($f))
+                $output.= $line;
+
+              fclose($f);
+              
+              // check if it's redirect              
+              if (preg_match('/HTTP\/.{3} (301|302)/', $output))
+              {
+                // get location
+                if (preg_match('/Location: (.*?)\r/i', $output, $o))
+                  $data = $this->get_content($o[1]);
+              }
+              else
+              {
+                $delimiter = strpos($output, "\r\n\r\n");
+                $data = substr($output, $delimiter + 4, strlen($output) - $delimiter - 4);
+              }
+              
+              $handled = true;
+            }            
+          }
+        }
       }
+      
+      if (!$handled)
+        throw new jsdelivr_Exception(__('Cannot get content from remote server. Please enable CURL or allow_url_fopen with appropriate wrappers or tcp/ssl transports on your server.', self::ld));
+      
       return $data;             
     }
     
     // check update CDN timestamp    
     function check_update_cdn()
     {
-      $timestamp = trim($this->get_content($this->timestamp_url));
+      $timestamp = trim($this->get_content(self::timestamp_url));
       
       if (!$timestamp)
-      {
         return false;
-      }
       
       if ($timestamp == get_option('jsdelivr_last_cdn_update', false) ||
           $timestamp == get_option('jsdelivr_update_cdn_timestamp', false))
@@ -529,10 +629,8 @@ if (!class_exists('jsdelivr'))
     {
       global $wpdb;
 
-      if (!$data = $this->get_content($this->update_cdn_url))
-      {
+      if (!$data = $this->get_content(self::update_cdn_url))        
         return false;
-      }
       
       // truncate tables
       $wpdb->query("TRUNCATE TABLE ".$wpdb->jsd_cdnp); 
@@ -557,9 +655,7 @@ if (!class_exists('jsdelivr'))
         
         $sql_values = array();
         while(list($file_id, $file_name) = @each($package['files']))
-        {
           $sql_values[] = "($insert_id, '".$wpdb->escape($file_name)."', '".$wpdb->escape($package['hashes'][$file_id])."')";
-        }
         
         if (count($sql_values) > 0)
         {                
@@ -569,35 +665,50 @@ if (!class_exists('jsdelivr'))
       }
       
       if (!$timestamp = get_option('jsdelivr_update_cdn_timestamp', false))
-      {      
         $timestamp = $this->check_update_cdn();
-      }                              
+        
       update_option('jsdelivr_last_cdn_update', $timestamp);
 
       $this->generate_replace_data();
           
       return true;
     }
+    
+    
+    // preg_quote all values in array
+    function preg_quote_array($array)
+    {
+      foreach($array as $k => $v)
+        $array[$k] = preg_quote($v);
+        
+      return $array;
+    }
         
     // creates list of scripts and CSS links
     protected function parse_html($data)
-    {                                            
-      if (preg_match_all('/(<link.[^>]+href\s*=\s*[\'"](.[^\."\']+\.css)(\?ver=(.[^\'"]+?)|)[\'"].*?'.'>)|(<script.[^>]+src\s*=\s*[\'|"](.[^\?"\']+)(\?ver=(.[^\'"]+)|)[\'|"].*?<\/script>)|(<img.+?src\s*=\s*[\'|"](.[^\'"]+).*?'.'>)/is', $data, $o))
-      {
+    {
+      // prepare ignore list
+      $ignore_list = '/'.@implode('|', self::preg_quote_array($this->scan_skip_urls)).'/i';
+      $exts = $this->supported_image_exts;
+      
+      if (preg_match_all('/(<link.[^>]*href\s*=\s*[\'"](.[^"\']+\.css)(\?ver=(.[^\'"]+?)|)[\'"].*?'.'>)|(<script.[^>]*src\s*=\s*[\'|"](.[^\?"\']+)(\?ver=(.[^\'"]+)|)[\'|"].*?<\/script>)|(<img.[^>]*src\s*=\s*[\'|"](.[^\'"]+\.('.implode('|', $exts).'))[\'"].*?'.'>)/is', $data, $o))
+      {        
         $main_url = get_site_url().'/';
         $list = array(); 
         while(list($k, $v) = @each($o[0]))
         {          
           $url = trim($o[2][$k]?$o[2][$k]:($o[6][$k]?$o[6][$k]:($o[10][$k]?$o[10][$k]:'')));
 
-          // skip google hosted files
-          if (stripos($url, '.googleapis.com') !== false) continue;
+          // skip names listed in the ignore list
+          if (preg_match($ignore_list, $url)) continue;
           
           $version = trim($o[4][$k]?$o[4][$k]:($o[8][$k]?$o[8][$k]:''));
           $file = str_replace($main_url, ABSPATH, $url);
           
           $key = md5($url.$version);          
           if (isset($list[$key])) continue;
+          
+          $hash = @md5_file($file);          
                               
           $list[$key] = array(
                 'type' => $o[1][$k]?JSDT_CSS:($o[5][$k]?JSDT_JAVASCRIPT:($o[10][$k]?JSDT_IMAGE:JSDT_UNKNOWN)), // 0- unknown, 1- css, 2- image,3- javascript
@@ -605,7 +716,7 @@ if (!class_exists('jsdelivr'))
                 'url' => $url,
                 'file' => $file,
                 'rel_filename' => str_replace($main_url, '', $url),
-                'hash' => md5_file($file),                 
+                'hash' => $hash?$hash:false,                 
                 'version' => $version
               );        
         }
@@ -623,13 +734,10 @@ if (!class_exists('jsdelivr'))
         if (in_array($file, $data['files']))
         {
           if (in_array($version, $data['versions']))
-          {
             $match = JSDM_FULL;          
-          }
           else
-          {
             $match = JSDM_MAYBE;
-          }          
+            
           return array(
                     'name' => $name,
                     'match' => $match          
@@ -644,20 +752,17 @@ if (!class_exists('jsdelivr'))
     {
       // W3 Total Cache
       if (function_exists('w3tc_pgcache_flush'))
-      {
-        w3tc_pgcache_flush();      
-      }
+        w3tc_pgcache_flush();
       
       // WP Super Cache
       if (function_exists('wp_cache_clear_cache'))
-      {
         wp_cache_clear_cache();
-      }    
+        
     }
     
     // scan page and save script/css files into DB
     protected function scan()
-    {
+    {      
       global $wpdb;            
       update_option('jsdelivr_enabled', false);
       
@@ -666,30 +771,27 @@ if (!class_exists('jsdelivr'))
                       SELECT hash, enabled, footer, defer, async, priority
                       FROM {$wpdb->jsd_files}
                 ", ARRAY_A);
+                
       $old_settings = array();
       while(list(, $l) = @each($r))
-      {
         $old_settings[$l['hash']] = $l;
-      }      
+        
       
       // truncate table with files
       $wpdb->query("TRUNCATE TABLE ".$wpdb->jsd_files);
     
       $pages = array();
-      $pages[] = get_bloginfo('home'); // it can scan more URLs, but this is for testing 
+      $pages[] = get_bloginfo('home').'/'; // it can scan more URLs, but this is for testing 
 
       // cache flush
       $this->cache_flush();
       
       $html = '';
       while(list(, $page) = @each($pages))
-      {
         if ($c = $this->get_content($page))
-        {
           $html.= $c;         
-        }        
-      }
-              
+      
+      
       $list = $this->parse_html($html);
       
       // prepare query and insert into DB
@@ -762,7 +864,7 @@ if (!class_exists('jsdelivr'))
         {
           $enabled = $footer = $defer = $async = $priority = 0;
         }
-                                                            
+        
         $sql_values[] = "(".$item['type'].",
                           '".$file."',
                           '".$wpdb->escape($item['rel_filename'])."',
@@ -900,11 +1002,7 @@ if (!class_exists('jsdelivr'))
       return htmlentities(stripslashes($t), ENT_COMPAT, 'UTF-8');
     }            
   }
-}
-
-if (class_exists('jsdelivr'))
-{
-  register_uninstall_hook(__FILE__, array('jsdelivr', 'uninstall'));      
-  new jsdelivr();      
+  
+  new jsdelivr();
 }
 ?>

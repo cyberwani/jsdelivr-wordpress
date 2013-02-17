@@ -1,3 +1,3 @@
 <p>
-  <?php _e('Overview of this plugin', $this->ld); ?>
+  <?php _e('Overview of this plugin', self::ld); ?>
 </p>
