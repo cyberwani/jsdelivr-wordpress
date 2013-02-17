@@ -4,7 +4,7 @@ Donate link: http://www.jsdelivr.com
 Tags: cdn,speed,jsdelivr,optimize,delivery,network,javascript,async,defer,performance,
 Requires at least: 3.0
 Tested up to: 3.4.1
-Stable tag: 0.1
+Stable tag: 0.2
 
 The official plugin of jsDelivr.com, a free public CDN. An easy way to integrate the service and speed up your website using our super fast CDN.
 
@@ -51,6 +51,17 @@ Dont worry about it.
 
 
 == Changelog ==
+
+= 0.2 =
+* Some misc. changes
+* Solved the problem with infinity scanning (added better error handling)
+* Added alternative method to CURL via file_get_contents (if http wrapper and allow_url_fopen is enabled) or fsockopen
+* Updated versions of google hosted files (I did it only up to 1.8.3, because it seems that many scripts are unstable with jQuery 1.9.x)
+* Fixed issue with problematic detection of protocol used on webserver (http or https)
+* Fixed regular expressions (problems with search)
+* Images are parsed by extension (so I added list of supported extensions)
+
+
 
 = 0.1 =
 * First release
